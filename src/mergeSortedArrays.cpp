@@ -20,7 +20,66 @@ struct transaction {
 	char date[11];
 	char description[20];
 };
+int* tokens(char* d){
+	int* token = (int*)malloc(sizeof(int) * 3), j = 0;
+	int temp = 0, i = 0;
 
+	while (i<11){
+		while (d[i] != '-' && d[i] >= '0' && d[i] <= '9'){
+			temp = temp * 10 + (d[i] - '0');
+			i++;
+		}
+		token[j] = temp;
+		j++;
+		i++;
+		if ((d[i]) == '\0') break;
+		temp = 0;
+	}
+	return token;
+}
+bool isOLD(char* d1, char* d2){
+	int *token1, *token2;
+	token1 = tokens(d1);
+	token2 = tokens(d2);
+	if (token1[0] == token2[0] && token1[1] == token2[1] && token1[2] == token2[2])
+		return false;
+	else if (token1[2] > token2[2]){
+		return false;
+		if (token1[1] > token2[1]){
+			return false;
+			if (token1[0] > token2[0])
+				return false;
+		}
+	}
+	else return true;
+}
 struct transaction * mergeSortedArrays(struct transaction *A, int ALen, struct transaction *B, int BLen) {
-	return NULL;
+	struct transaction *C = (transaction*)malloc(sizeof(transaction)*(ALen + BLen));
+	if (A && B){
+		int i = 0, j = 0, k = 0;
+		while (i < ALen && j < BLen){
+			if (isOLD(A[i].date, B[j].date)){
+				C[k] = A[i];
+				i++;
+			}
+			else{
+				C[k] = B[j];
+				j++;
+			}
+			k++;
+		}
+		while (i < ALen){
+			C[k] = A[i];
+			k++;
+			i++;
+		}
+		while (j < BLen){
+			C[k] = B[j];
+			k++;
+			j++;
+		}
+		return C;
+	}
+	else return NULL;
+
 }

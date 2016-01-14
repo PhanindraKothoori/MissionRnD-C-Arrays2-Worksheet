@@ -14,5 +14,17 @@ NOTES:
 */
 
 int findSingleOccurenceNumber(int *A, int len) {
-	return -1;
+	if (A){
+		int ones = 0, twos = 0;
+		int commons;
+		for (int i = 0; i < len; i++){
+			twos |= (ones&A[i]);
+			ones ^= A[i];
+			commons = ~(ones&twos);
+			ones &= commons;
+			twos &= commons;
+		}
+		return ones;
+	}
+	else return -1;
 }

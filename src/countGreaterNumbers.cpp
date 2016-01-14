@@ -13,13 +13,53 @@ ERROR CASES: Return NULL for invalid inputs.
 
 NOTES:
 */
-
+#include<malloc.h>
 struct transaction {
 	int amount;
 	char date[11];
 	char description[20];
 };
+int* tokenize(char* d){
+	int* token = (int*)malloc(3 * sizeof(int)), j = 0;
+	int temp = 0, i = 0;
+
+	while (i<11){
+		while (d[i] != '-' && d[i] >= '0' && d[i] <= '9'){
+			temp = temp * 10 + (d[i] - '0');
+			i++;
+		}
+		token[j] = temp;
+		j++;
+		i++;
+		if ((d[i]) == '\0') break;
+		temp = 0;
+	}
+	return token;
+}
+bool isOlder(char* d1, char* d2){
+	int *token1, *token2;
+	token1 = tokenize(d1);
+	token2 = tokenize(d2);
+	if (token1[0] == token2[0] && token1[1] == token2[1] && token1[2] == token2[2])
+		return false;
+	else if (token1[2] > token2[2]){
+		return false;
+		if (token1[1] > token2[1]){
+			return false;
+			if (token1[0] > token2[0])
+				return false;
+		}
+	}
+	else return true;
+}
 
 int countGreaterNumbers(struct transaction *Arr, int len, char *date) {
-	return -1;
+	int i = 0, count = 0;
+	while (i < len){
+		if (isOlder(date, Arr[i].date)){
+			count++;
+		}
+		i++;
+	}
+	return count;
 }
